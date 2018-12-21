@@ -7,15 +7,15 @@
 
 ```java
 public interface Consts {
-	/** 카운트 관련 */
-	Integer MIN_COUNT = 10;
-	Integer MAX_COUNT = 100;
+    /** 카운트 관련 */
+    Integer MIN_COUNT = 10;
+    Integer MAX_COUNT = 100;
 
-	/* 공통코드 관련 */
-	String MAN = "m";
-	String WOMAN = "f";
+    /* 공통코드 관련 */
+    String MAN = "m";
+    String WOMAN = "f";
 
-	// ...
+    // ...
 }
 ```
 
@@ -36,37 +36,37 @@ public interface Consts {
 
 - 부수적인 장점
   - switch문에서 사용가능하다
-	 
+     
 ---
 
 - 사용예제
 ```java
 public enum EndSlct {
-	ON_SERVICE("n"),	// 서비스중 
-	FINISHED("y"), 		// 종료
-	EXPIRED("c"), 		// 만료
-	SAVED("i");				// 저장
+    ON_SERVICE("n"),    // 서비스중 
+    FINISHED("y"),         // 종료
+    EXPIRED("c"),         // 만료
+    SAVED("i");                // 저장
 
-	private String value;
-	
-	EndSlct(String value) {
-		this.value = value;
-	}
-	
-	public String getKey() {
-		return name();
-	}
-	
-	public String getValue() {
-		return value;
-	}
+    private String value;
+    
+    EndSlct(String value) {
+        this.value = value;
+    }
+    
+    public String getKey() {
+        return name();
+    }
+    
+    public String getValue() {
+        return value;
+    }
 }
 ```
 
 - Enum 클래스 활용
 ```java
 Class endSlctClass = EndSlct.class
-endSlctClass.getEnumConstants();	// [Enum이 갖는 name배열 반환]
+endSlctClass.getEnumConstants();    // [Enum이 갖는 name배열 반환]
 
 /**
  * Web에서 사용하기위해 JSON형태로 가공이 필요한 경우
@@ -77,17 +77,17 @@ endSlctClass.getEnumConstants();	// [Enum이 갖는 name배열 반환]
  *  - EnumValue는 화면으로 가져갈 VO클래스 (key, value값을 가짐)
  */
 private List<EnumValue> toEnumValues(Class<? extends EnumModel> e){
-	/* Java8이 아닐경우
-		List<EnumValue> enumValues = new ArrayList<>();
-		for (EnumModel enumType : e.getEnumConstants()) {
-				enumValues.add(new EnumValue(enumType));
-		}
-		return enumValues;
-	*/
-	return Arrays
-			.stream(e.getEnumConstants())
-			.map(EnumValue::new)
-			.collect(Collectors.toList());
+    /* Java8이 아닐경우
+        List<EnumValue> enumValues = new ArrayList<>();
+        for (EnumModel enumType : e.getEnumConstants()) {
+                enumValues.add(new EnumValue(enumType));
+        }
+        return enumValues;
+    */
+    return Arrays
+            .stream(e.getEnumConstants())
+            .map(EnumValue::new)
+            .collect(Collectors.toList());
 }
 
 ```
@@ -95,27 +95,27 @@ private List<EnumValue> toEnumValues(Class<? extends EnumModel> e){
 - 위 코드에서 필요한 클래스들 정의는 아래 참조
 ```java
 public interface EnumModel {
-	String getKey();
-	String getValue();
+    String getKey();
+    String getValue();
 }
 ```
 ```java
 public class EnumValue {
-	private String key;
-	private String value;
+    private String key;
+    private String value;
 
-	public EnumValue(EnumModel enumModel) {
-		key = enumModel.getKey();
-		value = enumModel.getValue();
-	}
+    public EnumValue(EnumModel enumModel) {
+        key = enumModel.getKey();
+        value = enumModel.getValue();
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 }
 ```
 
@@ -128,67 +128,67 @@ public class EnumValue {
 - java 8 미만
 ```java
 enum Currency {
-	DOLLAR(1200) {
-		@Override
-		void showCurrency () {
-			System.out.println("DOLLAR !!");
-		}
-	},
-	YEN(1000) {
-		@Override
-		void showCurrency () {
-			System.out.println("YEN ##");
-		}
-	};
-	
-	private Integer value;
-	
-	Currency (Integer value) {
-		this.value = value;
-	}
-	
-	// enum별 각각 다른 처리가 필요한 함수는 추상메서드로 선언후 구현 (여러개 가능)
-	abstract void showCurrency();
-	
-	// 각 enum에게 모두 필요한 동일한 메소드
-	public Integer exchange(Integer won) {
-		return getValue() * won;
-	}
-	
-	public Integer getValue () {
-		return value;
-	}
+    DOLLAR(1200) {
+        @Override
+        void showCurrency () {
+            System.out.println("DOLLAR !!");
+        }
+    },
+    YEN(1000) {
+        @Override
+        void showCurrency () {
+            System.out.println("YEN ##");
+        }
+    };
+    
+    private Integer value;
+    
+    Currency (Integer value) {
+        this.value = value;
+    }
+    
+    // enum별 각각 다른 처리가 필요한 함수는 추상메서드로 선언후 구현 (여러개 가능)
+    abstract void showCurrency();
+    
+    // 각 enum에게 모두 필요한 동일한 메소드
+    public Integer exchange(Integer won) {
+        return getValue() * won;
+    }
+    
+    public Integer getValue () {
+        return value;
+    }
 }
 ```
 
 - java 8 이상
   - FunctionalInterface를 필드로 갖게 해서 구현할 수 있다.
-	- 아래 예제의 Consumer뿐만 아니라 Fucntion, Predicate 이외의 모든 F/I 가능
+    - 아래 예제의 Consumer뿐만 아니라 Fucntion, Predicate 이외의 모든 F/I 가능
 ```java
 enum Currency {
-	DOLLAR(1200, name -> System.out.println(name + "!!")),
-	YEN(1000, name -> System.out.println(name + "##"));
-	
-	private Integer value;
-	private Consumer<String> expression;
-	
-	Currency (Integer value, Consumer<String> expression) {
-		this.value = value;
-		this.expression = expression;
-	}
-	
-	// enum별 각각 다른 처리가 필요한 함수는 추상메서드로 선언후 구현 (여러개 가능)
-	public void showCurrency() {
-		expression.accept(name());
-	}
-	
-	// 각 enum에게 모두 필요한 동일한 메소드
-	public Integer exchange(Integer won) {
-		return getValue() * won;
-	}
-	
-	public Integer getValue () {
-		return value;
-	}
+    DOLLAR(1200, name -> System.out.println(name + "!!")),
+    YEN(1000, name -> System.out.println(name + "##"));
+    
+    private Integer value;
+    private Consumer<String> expression;
+    
+    Currency (Integer value, Consumer<String> expression) {
+        this.value = value;
+        this.expression = expression;
+    }
+    
+    // enum별 각각 다른 처리가 필요한 함수는 추상메서드로 선언후 구현 (여러개 가능)
+    public void showCurrency() {
+        expression.accept(name());
+    }
+    
+    // 각 enum에게 모두 필요한 동일한 메소드
+    public Integer exchange(Integer won) {
+        return getValue() * won;
+    }
+    
+    public Integer getValue () {
+        return value;
+    }
 }
 ```
